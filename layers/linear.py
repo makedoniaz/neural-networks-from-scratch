@@ -11,7 +11,6 @@ class Linear(Layer):
 
         self.dW = None
         self.db = None
-        self.cache = None
 
     def forward(self, X: np.ndarray):
         self.cache = X
@@ -29,4 +28,4 @@ class Linear(Layer):
         return dX
     
     def __repr__(self):
-        return f"Linear({self.input_size} -> {self.output_size})"
+        return f"{self.__class__.__name__}({self.input_size} -> {self.output_size})"
