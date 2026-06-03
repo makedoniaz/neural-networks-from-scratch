@@ -4,14 +4,9 @@ from losses import Loss
 from network import Network
 
 class Optimizer(ABC):
-    def __init__(self, model: Network, loss_func: Loss, learning_rate):
+    def __init__(self, model: Network, learning_rate):
         self.model = model
-        self.loss_func = loss_func
         self.learning_rate = learning_rate
-    
-    def backward(self):
-        dout = self.loss_func.backward()
-        self.model.backward(dout)
     
     def step(self):
         for layer in self.model.layers:
