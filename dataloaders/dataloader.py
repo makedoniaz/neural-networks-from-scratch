@@ -9,6 +9,12 @@ class Dataloader:
         self.shuffle = shuffle
     
     def __iter__(self):
+        def collate_batch(batch):
+            return {
+                key: np.array([sample[key] for sample in batch])
+                for key in batch[0]
+            }
+
         batch = []
 
         indices = np.random.permutation(len(self.dataset)) \
@@ -18,8 +24,8 @@ class Dataloader:
             batch.append(self.dataset[index])
 
             if len(batch) == self.batch_size:
-                yield np.array(batch)
+                yield collate_batch(batch)
                 batch = []
         
         if batch and not self.drop_last:
-            yield np.array(batch)
+            yield collate_batch(batch)

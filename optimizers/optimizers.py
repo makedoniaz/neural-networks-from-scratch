@@ -6,8 +6,8 @@ class SGD(Optimizer):
         param -= self.learning_rate * grad
 
 class SGDMomentum(Optimizer):
-    def __init__(self, model, loss_func, learning_rate, momentum=0.9):
-        super().__init__(model, loss_func, learning_rate)
+    def __init__(self, model, learning_rate, momentum=0.9):
+        super().__init__(model, learning_rate)
         self.momentum = momentum
         self.velocities = {}
 
@@ -24,9 +24,9 @@ class SGDMomentum(Optimizer):
         self.velocities[param_id] = v
 
 class Adam(Optimizer):
-    def __init__(self, model, loss_func, learning_rate=1e-3,
+    def __init__(self, model, learning_rate=1e-3,
                  beta1=0.9, beta2=0.999, eps=1e-8):
-        super().__init__(model, loss_func, learning_rate)
+        super().__init__(model, learning_rate)
         self.beta1 = beta1
         self.beta2 = beta2
         self.eps = eps

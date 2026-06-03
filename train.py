@@ -56,6 +56,6 @@ class Trainer():
             correct += np.sum(preds == y)
 
         return {
-            "loss": total_loss / total_samples,
-            "accuracy": correct / total_samples,
+            "loss": float(total_loss / total_samples),
+            "accuracy": float(correct / total_samples),
         }

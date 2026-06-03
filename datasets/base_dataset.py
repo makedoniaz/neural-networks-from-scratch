@@ -15,12 +15,26 @@ class Dataset(ABC):
 
 
 class DummyDataset(Dataset):
-    def __init__(self, root, num_samples = 10):
+    def __init__(
+        self,
+        root=None,
+        num_samples=20,
+        num_features=10,
+        num_classes=3,
+        seed=1,
+    ):
         super().__init__(root)
-        self.data = np.linspace(1, 10, num_samples)
+
+        rng = np.random.default_rng(seed)
+
+        self.X = rng.standard_normal((num_samples, num_features))
+        self.y = rng.integers(0, num_classes, size=num_samples)
 
     def __len__(self):
-        return len(self.data)
+        return len(self.X)
 
     def __getitem__(self, index):
-        return {"data": self.data[index].item()}
+        return {
+            "data": self.X[index],
+            "label": self.y[index],
+        }
