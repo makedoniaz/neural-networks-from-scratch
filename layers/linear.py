@@ -3,6 +3,7 @@ from .base_layer import Layer
 
 class Linear(Layer):
     def __init__(self, input_size, output_size, std=1e-3):
+        super().__init__()
         self.input_size = input_size
         self.output_size = output_size
         
@@ -27,5 +28,11 @@ class Linear(Layer):
 
         return dX
     
+    def parameters(self):
+        return [
+            (self.W, self.dW),
+            (self.b, self.db)
+        ]
+
     def __repr__(self):
         return f"{self.__class__.__name__}({self.input_size} -> {self.output_size})"

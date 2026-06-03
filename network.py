@@ -1,8 +1,10 @@
+
+from layers import Layer
 import pickle
 import os
 
 class Network():
-    def __init__(self, layers, model_name="model_name"):
+    def __init__(self, layers: list[Layer], model_name="model_name"):
         self.layers = layers
         self.model_name = model_name
     
