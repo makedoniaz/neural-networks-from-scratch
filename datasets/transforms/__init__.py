@@ -4,5 +4,4 @@ from .trasnforms import (
     ToFloat,
     Normalize,
     Scale,
-    Flatten
 )

@@ -7,7 +7,7 @@ class Transform(ABC):
         pass
 
 class Compose(Transform):
-    def __init__(self, transforms):
+    def __init__(self, transforms: list[Transform]):
         self.transforms = transforms
 
     def __call__(self, x):
@@ -33,7 +33,3 @@ class Scale(Transform):
 
     def __call__(self, x):
         return x / self.scale
-
-class Flatten(Transform):
-    def __call__(self, x):
-        return x.reshape(-1)
