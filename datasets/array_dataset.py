@@ -1,5 +1,5 @@
 from .base_dataset import Dataset
-from .trasnforms import Transform
+from .transforms import Transform
 
 class ArrayDataset(Dataset):
     def __init__(self, data, labels, transform: Transform = None, target_transform: Transform = None):

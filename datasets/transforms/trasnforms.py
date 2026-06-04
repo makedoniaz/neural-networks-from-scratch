@@ -1,11 +1,10 @@
 from abc import ABC, abstractmethod
 import numpy as np
 
-class Transform():
+class Transform(ABC):
     @abstractmethod
     def __call__(self, x):
         pass
-
 
 class Compose(Transform):
     def __init__(self, transforms):
@@ -15,7 +14,6 @@ class Compose(Transform):
         for transform in self.transforms:
             x = transform(x)
         return x
-
 
 class ToFloat(Transform):
     def __call__(self, x):
