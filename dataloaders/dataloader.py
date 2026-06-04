@@ -1,7 +1,7 @@
 from datasets import Dataset
 import numpy as np
 
-class Dataloader:
+class DataLoader:
     def __init__(self, dataset: Dataset, batch_size, drop_last, shuffle):
         self.dataset = dataset
         self.batch_size = batch_size

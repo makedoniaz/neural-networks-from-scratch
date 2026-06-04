@@ -18,6 +18,14 @@ class Network():
             dout = layer.backward(dout)
         return dout
     
+    def parameters(self):
+        params = []
+
+        for layer in self.layers:
+            params.extend(layer.parameters())
+
+        return params
+    
     def save_model(self, directory="models"):
         path = os.path.join(directory, f"{self.model_name}.p")
 
@@ -26,3 +34,14 @@ class Network():
 
         with open(path, 'wb') as file:
             pickle.dump(self, file)
+
+    def __call__(self, X):
+        return self.forward(X)
+    
+    def __repr__(self):
+        layers = "\n".join(
+            f"  ({i}): {layer}"
+            for i, layer in enumerate(self.layers)
+        )
+
+        return f"Network(\n{layers}\n)"
