@@ -2,29 +2,22 @@ from abc import ABC, abstractmethod
 import numpy as np
 
 class Dataset(ABC):
-    def __init__(self, root):
-        self.root = root
-    
     @abstractmethod
     def __len__(self):
         pass
-    
+
     @abstractmethod
     def __getitem__(self, index):
         pass
 
-
 class DummyDataset(Dataset):
     def __init__(
         self,
-        root=None,
         num_samples=20,
         num_features=10,
         num_classes=3,
         seed=1,
     ):
-        super().__init__(root)
-
         rng = np.random.default_rng(seed)
 
         self.X = rng.standard_normal((num_samples, num_features))
