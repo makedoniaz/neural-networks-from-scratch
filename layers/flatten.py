@@ -1,4 +1,4 @@
-from base_layer import Layer
+from .base_layer import Layer
 
 class Flatten(Layer):
     def forward(self, X):

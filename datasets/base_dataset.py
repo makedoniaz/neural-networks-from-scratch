@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-from .subset import Subset
 import numpy as np
 
 class Dataset(ABC):
@@ -12,6 +11,7 @@ class Dataset(ABC):
         pass
 
     def subset(self, indices):
+        from .subset import Subset
         return Subset(self, indices)
 
 class DummyDataset(Dataset):
