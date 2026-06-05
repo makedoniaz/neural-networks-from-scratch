@@ -6,12 +6,13 @@ from losses import Loss
 from history import History
 
 class Trainer():
-    def __init__(self, model: Network, loss_func: Loss, optimizer: Optimizer, train_loader: DataLoader, val_loader: DataLoader = None):
+    def __init__(self, model: Network, loss_func: Loss, optimizer: Optimizer, train_loader: DataLoader, val_loader: DataLoader = None, reg=0.0):
         self.model = model
         self.train_loader = train_loader
         self.val_loader = val_loader
         self.optimizer = optimizer
         self.loss_func = loss_func
+        self.reg = reg
 
     def train(self, epochs):
         history = History()
