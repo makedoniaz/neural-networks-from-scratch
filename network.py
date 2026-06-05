@@ -17,6 +17,12 @@ class Network():
         for layer in reversed(self.layers):
             dout = layer.backward(dout)
         return dout
+
+    def get_parameter_values(self):
+        return [
+            param.data.copy()
+            for param in self.parameters()
+        ]
     
     def parameters(self):
         params = []
@@ -25,6 +31,10 @@ class Network():
             params.extend(layer.parameters())
 
         return params
+    
+    def set_parameters(self, parameters):
+        for param, data in zip(self.parameters(), parameters):
+            param.data[:] = data
     
     def save_model(self, directory="models"):
         path = os.path.join(directory, f"{self.model_name}.p")

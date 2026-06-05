@@ -3,16 +3,20 @@ from .base_layer import Layer
 from parameter import Parameter
 
 class Linear(Layer):
-    def __init__(self, input_size, output_size, std=1e-3):
+    def __init__(self, input_size, output_size, initialization="he"):
         super().__init__()
         self.input_size = input_size
         self.output_size = output_size
-        
-        self.W = std * np.random.randn(input_size, output_size)
-        self.b = np.zeros(output_size)
+
+        if initialization == "he":
+            std = np.sqrt(2 / input_size)
+        elif initialization == "xavier":
+            std = np.sqrt(1 / input_size)
+        else:
+            std = 1e-3
 
         self.W = Parameter(
-            std * np.random.randn(input_size, output_size),
+            np.random.randn(input_size, output_size) * std,
             weight_decay=True
         )
 

@@ -6,16 +6,32 @@ from losses import Loss
 from history import History
 
 class Trainer():
-    def __init__(self, model: Network, loss_func: Loss, optimizer: Optimizer, train_loader: DataLoader, val_loader: DataLoader = None, reg=0.0):
+    def __init__(self, model: Network, loss_func: Loss, optimizer: Optimizer, train_loader: DataLoader, val_loader: DataLoader = None, reg=0.0, scheduler = None):
         self.model = model
         self.train_loader = train_loader
         self.val_loader = val_loader
         self.optimizer = optimizer
         self.loss_func = loss_func
+        self.scheduler = scheduler
         self.reg = reg
 
-    def train(self, epochs):
+    def train(self, epochs, checkpoint_monitor=None, checkpoint_mode="max"):
         history = History()
+
+        checkpoint_enabled = checkpoint_monitor is not None
+
+        if checkpoint_enabled and self.val_loader is None:
+            raise ValueError(
+                "Checkpointing requires a validation loader."
+            )
+
+        if checkpoint_enabled:
+            monitor = checkpoint_monitor
+            mode = checkpoint_mode
+
+            best_score = -np.inf if mode == "max" else np.inf
+            best_parameters = None
+
 
         for epoch in range(epochs):
             train_stats = self._run_epoch(self.train_loader, training=True)
@@ -27,13 +43,29 @@ class Trainer():
                 val_stats = self._run_epoch(self.val_loader, training=False)
                 history.append_stats("val", val_stats)
 
+                if checkpoint_enabled:
+                    current_score = val_stats[monitor]
+
+                    improved = (
+                        current_score > best_score
+                        if mode == "max"
+                        else current_score < best_score
+                    )
+
+                    if improved:
+                        best_score = current_score
+                        best_parameters = self.model.get_parameter_values()
+                
 
             self._print_epoch(epoch, epochs, train_stats, val_stats)
+
+            if self.scheduler is not None:
+                self.scheduler.step()
+
+        if checkpoint_enabled and best_parameters is not None:
+            self.model.set_parameters(best_parameters)
         
         return history
-
-    def evaluate(self, dataloader):
-        return self._run_epoch(dataloader, training=False)
 
     def _run_epoch(self, dataloader, training):
         total_loss = 0
