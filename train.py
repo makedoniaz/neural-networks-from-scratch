@@ -1,11 +1,12 @@
 from network import Network
 from optimizers import Optimizer
-from dataloaders import Dataloader
+from dataloader import DataLoader
 import numpy as np
 from losses import Loss
+from history import History
 
 class Trainer():
-    def __init__(self, model: Network, loss_func: Loss, optimizer: Optimizer, train_loader: Dataloader, val_loader: Dataloader = None):
+    def __init__(self, model: Network, loss_func: Loss, optimizer: Optimizer, train_loader: DataLoader, val_loader: DataLoader = None):
         self.model = model
         self.train_loader = train_loader
         self.val_loader = val_loader
@@ -13,20 +14,22 @@ class Trainer():
         self.loss_func = loss_func
 
     def train(self, epochs):
+        history = History()
+
         for epoch in range(epochs):
             train_stats = self._run_epoch(self.train_loader, training=True)
+            history.append_stats("train", train_stats)
 
-            val_message = ""
+            val_stats = None
 
             if self.val_loader is not None:
                 val_stats = self._run_epoch(self.val_loader, training=False)
-                val_message = f"; val loss: {val_stats['loss']:.6f}"
+                history.append_stats("val", val_stats)
 
-            print(
-                f"(Epoch {epoch + 1} / {epochs}) "
-                f"train loss: {train_stats['loss']:.6f}"
-                f"{val_message}"
-            )
+
+            self._print_epoch(epoch, epochs, train_stats, val_stats)
+        
+        return history
 
     def evaluate(self, dataloader):
         return self._run_epoch(dataloader, training=False)
@@ -59,3 +62,18 @@ class Trainer():
             "loss": float(total_loss / total_samples),
             "accuracy": float(correct / total_samples),
         }
+    
+    def _print_epoch(self, epoch, epochs, train_stats, val_stats=None):
+        message = (
+            f"(Epoch {epoch + 1} / {epochs}) "
+            f"train loss: {train_stats['loss']:.6f}; "
+            f"train accuracy: {train_stats['accuracy']:.4f}"
+        )
+
+        if val_stats is not None:
+            message += (
+                f"; val loss: {val_stats['loss']:.6f}; "
+                f"val accuracy: {val_stats['accuracy']:.4f}"
+            )
+
+        print(message)
