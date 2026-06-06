@@ -1,5 +1,5 @@
 from .array_dataset import ArrayDataset
-from .transforms import Transform
+from .utils import Transform
 import idx2numpy
 
 class IDXDataset(ArrayDataset):

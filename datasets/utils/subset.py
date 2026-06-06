@@ -1,4 +1,4 @@
-from .base_dataset import Dataset
+from datasets.base_dataset import Dataset
 import numpy as np
 
 class Subset(Dataset):

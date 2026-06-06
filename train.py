@@ -1,9 +1,9 @@
-from network import Network
+from network.network import Network
 from optimizers import Optimizer
 from dataloader import DataLoader
 import numpy as np
 from losses import Loss
-from history import History
+from eval.history import History
 
 class Trainer():
     def __init__(self, model: Network, loss_func: Loss, optimizer: Optimizer, train_loader: DataLoader, val_loader: DataLoader = None, reg=0.0, scheduler = None):

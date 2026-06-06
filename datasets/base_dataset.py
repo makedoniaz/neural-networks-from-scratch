@@ -11,7 +11,7 @@ class Dataset(ABC):
         pass
 
     def subset(self, indices):
-        from .subset import Subset
+        from .utils.subset import Subset
         return Subset(self, indices)
 
 class DummyDataset(Dataset):

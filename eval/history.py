@@ -1,7 +1,6 @@
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator
 
-
 class History:
     def __init__(self):
         self.metrics = {}

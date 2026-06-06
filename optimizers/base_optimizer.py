@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-from network import Network
 
 class Optimizer(ABC):
     def __init__(self, parameters, learning_rate, weight_decay=0.0):

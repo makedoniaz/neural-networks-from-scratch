@@ -1,6 +1,6 @@
 import numpy as np
 from .base_layer import Layer
-from parameter import Parameter
+from network.parameter import Parameter
 
 class Linear(Layer):
     def __init__(self, input_size, output_size, initialization="he"):
