@@ -16,8 +16,8 @@ class Dropout(Layer):
         self.prob = prob
         self.mask = None
 
-    def forward(self, X: np.ndarray, training: bool = True) -> np.ndarray:
-        if not training:
+    def forward(self, X: np.ndarray) -> np.ndarray:
+        if not self.training:
             return X
 
         self.mask = np.random.rand(*X.shape) > self.prob
