@@ -8,6 +8,14 @@ class Network():
         self.layers = layers
         self.model_name = model_name
     
+    def train(self):
+        for layer in self.layers:
+            layer.training = True
+
+    def eval(self):
+        for layer in self.layers:
+            layer.training = False
+
     def forward(self, X):
         for layer in self.layers:
             X = layer.forward(X)

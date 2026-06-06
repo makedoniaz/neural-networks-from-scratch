@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 class Layer(ABC):
     def __init__(self):
         self.cache = None
+        self.training = True
 
     @abstractmethod
     def forward(self, X):

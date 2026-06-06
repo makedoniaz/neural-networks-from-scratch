@@ -5,5 +5,6 @@ from .activations import (
     ReLU,
     LeakyReLU,
     Sigmoid,
-    Tanh
+    Tanh,
 )
+from .dropout import Dropout
