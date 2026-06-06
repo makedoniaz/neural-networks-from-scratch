@@ -1,4 +1,4 @@
-from datasets import Dataset
+from .base_dataset import Dataset
 import numpy as np
 
 class DataLoader:

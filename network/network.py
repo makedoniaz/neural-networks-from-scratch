@@ -1,7 +1,7 @@
 from layers import Layer
+import numpy as np
 import pickle
 import os
-import numpy as np
 
 class Network:
     """Neural network container that manages layers, forward/backward propagation, and model persistence.
@@ -83,16 +83,57 @@ class Network:
             param.data[:] = data
     
     def save_model(self, directory: str = "models") -> None:
-        """Save the model to disk using pickle.
-
+        """Save model parameters and metadata to disk.
+        
         Args:
             directory: Directory path where model will be saved. Defaults to 'models'.
         """
-        path = os.path.join(directory, f"{self.model_name}.p")
+
         if not os.path.exists(directory):
             os.makedirs(directory)
-        with open(path, 'wb') as file:
-            pickle.dump(self, file)
+
+        path = os.path.join(directory, f"{self.model_name}.p")
+
+        state = {
+            "model_name": self.model_name,
+            "parameters": self.get_parameter_values(),
+        }
+
+        with open(path, "wb") as file:
+            pickle.dump(state, file)
+
+    @classmethod
+    def load_model(
+        cls,
+        model: "Network",
+        model_name: str,
+        directory: str = "models",
+    ) -> "Network":
+        """Load parameters into an existing model.
+        
+        Args:
+            model_name: Name of the model to load (without .p extension).
+            directory: Directory path where model is saved. Defaults to 'models'.
+
+        Returns:
+            Loaded Network instance.
+
+        Raises:
+            FileNotFoundError: If model file does not exist.
+        """
+
+        path = os.path.join(directory, f"{model_name}.p")
+
+        if not os.path.exists(path):
+            raise FileNotFoundError(f"Model file not found: {path}")
+
+        with open(path, "rb") as file:
+            state = pickle.load(file)
+
+        model.set_parameters(state["parameters"])
+        model.model_name = state["model_name"]
+
+        return model
 
     def __call__(self, X: np.ndarray) -> np.ndarray:
         return self.forward(X)

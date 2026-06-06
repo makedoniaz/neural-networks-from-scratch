@@ -1,6 +1,6 @@
 from network.network import Network
 from optimizers import Optimizer
-from dataloader import DataLoader
+from datasets import DataLoader
 import numpy as np
 from losses import Loss
 from eval.history import History

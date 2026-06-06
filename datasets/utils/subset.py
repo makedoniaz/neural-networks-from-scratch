@@ -1,4 +1,4 @@
-from datasets.base_dataset import Dataset
+from ..base_dataset import Dataset
 from collections.abc import Sequence
 import numpy as np
 

@@ -142,7 +142,10 @@ class Evaluator:
         plt.show()
 
     def plot_wrong_predictions(
-        self, results: dict, max_images: int = 9, image_shape: tuple[int, int] = (28, 28)
+        self,
+        results: dict,
+        max_images: int = 9,
+        image_shape: tuple[int, int] = (28, 28),
     ) -> None:
         """Visualize misclassified samples from evaluation results.
 
@@ -150,10 +153,70 @@ class Evaluator:
             results: Dictionary from evaluate() containing 'X', 'y_true', and 'y_pred'.
             max_images: Maximum number of wrong predictions to display. Defaults to 9.
             image_shape: Shape to reshape images for display (height, width). Defaults to (28, 28).
+        """
+
+        y_true = results["y_true"]
+        y_pred = results["y_pred"]
+
+        wrong_indices = np.where(y_true != y_pred)[0]
+
+        self._plot_predictions(
+            results=results,
+            indices=wrong_indices,
+            max_images=max_images,
+            image_shape=image_shape,
+            title_prefix="Wrong",
+        )
+
+    def plot_correct_predictions(
+        self,
+        results: dict,
+        max_images: int = 9,
+        image_shape: tuple[int, int] = (28, 28),
+    ) -> None:
+        """Visualize correctly classified samples from evaluation results.
+
+        Args:
+            results: Dictionary from evaluate() containing 'X', 'y_true', and 'y_pred'.
+            max_images: Maximum number of wrong predictions to display. Defaults to 9.
+            image_shape: Shape to reshape images for display (height, width). Defaults to (28, 28).
+        """
+
+        y_true = results["y_true"]
+        y_pred = results["y_pred"]
+
+        correct_indices = np.where(y_true == y_pred)[0]
+
+        self._plot_predictions(
+            results=results,
+            indices=correct_indices,
+            max_images=max_images,
+            image_shape=image_shape,
+            title_prefix="Correct",
+        )
+
+
+    def _plot_predictions(
+        self,
+        results: dict,
+        indices: np.ndarray,
+        max_images: int = 9,
+        image_shape: tuple[int, int] = (28, 28),
+        title_prefix: str = "",
+    ) -> None:
+        """Visualize selected prediction samples from evaluation results.
+
+        Args:
+            results: Dictionary returned by evaluate().
+            indices: Indices of samples to visualize.
+            max_images: Maximum number of samples to display.
+            image_shape: Shape used to reshape images for display.
+            title_prefix: Optional title prefix for each subplot.
 
         Raises:
-            ValueError: If results does not contain 'X' (requires store_data=True in evaluate()).
+            ValueError: If input data was not stored during evaluation.
         """
+
         if "X" not in results:
             raise ValueError("results must contain X. Use evaluate(..., store_data=True).")
 
@@ -161,15 +224,18 @@ class Evaluator:
         y_true = results["y_true"]
         y_pred = results["y_pred"]
 
-        wrong_indices = np.where(y_true != y_pred)[0]
-        wrong_indices = wrong_indices[:max_images]
+        indices = indices[:max_images]
+
+        if len(indices) == 0:
+            print("No samples to display.")
+            return
 
         cols = 3
-        rows = int(np.ceil(len(wrong_indices) / cols))
+        rows = int(np.ceil(len(indices) / cols))
 
         plt.figure(figsize=(8, 8))
 
-        for plot_idx, data_idx in enumerate(wrong_indices):
+        for plot_idx, data_idx in enumerate(indices):
             x = X[data_idx]
             true = int(y_true[data_idx])
             pred = int(y_pred[data_idx])
@@ -179,7 +245,7 @@ class Evaluator:
 
             plt.subplot(rows, cols, plot_idx + 1)
             plt.imshow(x.reshape(image_shape), cmap="gray")
-            plt.title(f"True: {true_name}\nPred: {pred_name}")
+            plt.title(f"{title_prefix}\nTrue: {true_name}\nPred: {pred_name}")
             plt.axis("off")
 
         plt.tight_layout()

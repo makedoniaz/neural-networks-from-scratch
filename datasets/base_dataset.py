@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-from utils.subset import Subset
 import numpy as np
 
 class Dataset(ABC):
@@ -22,7 +21,7 @@ class Dataset(ABC):
         """
         pass
 
-    def subset(self, indices: np.ndarray) -> Subset:
+    def subset(self, indices: np.ndarray):
         """Create a subset of this dataset.
 
         Args:
@@ -31,6 +30,7 @@ class Dataset(ABC):
         Returns:
             A Subset object containing only the selected samples.
         """
+        from .utils.subset import Subset
         return Subset(self, indices)
 
 class DummyDataset(Dataset):
