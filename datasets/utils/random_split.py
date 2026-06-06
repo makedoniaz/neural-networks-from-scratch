@@ -1,6 +1,7 @@
+from ..base_dataset import Dataset
 import numpy as np
 
-def random_split(dataset, splits, seed=None):
+def random_split(dataset: Dataset, splits: dict, seed=None) -> dict:
     rng = np.random.default_rng(seed)
     indices = rng.permutation(len(dataset))
 

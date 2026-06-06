@@ -2,16 +2,41 @@ from .base_optimizer import Optimizer
 import numpy as np
 
 class SGD(Optimizer):
-    def _update(self, param, grad):
+    """Stochastic Gradient Descent optimizer.
+
+    Basic gradient descent with constant learning rate:
+    param = param - learning_rate * grad.
+    """
+
+    def _update(self, param, grad) -> None:
         param.data -= self.learning_rate * grad
 
 class SGDMomentum(Optimizer):
-    def __init__(self, parameters, learning_rate=1e-3, momentum=0.9, weight_decay=0.0):
+    """SGD with Momentum optimizer.
+
+    Accumulates gradient momentum to accelerate convergence:
+    v = momentum * v - learning_rate * grad
+    param = param + v.
+
+    Args:
+        parameters: List of Parameter objects to optimize.
+        learning_rate: Learning rate. Defaults to 1e-3.
+        momentum: Momentum coefficient (typically 0.9). Defaults to 0.9.
+        weight_decay: L2 regularization coefficient. Defaults to 0.0.
+    """
+
+    def __init__(
+        self,
+        parameters: list,
+        learning_rate: float = 1e-3,
+        momentum: float = 0.9,
+        weight_decay: float = 0.0,
+    ) -> None:
         super().__init__(parameters, learning_rate, weight_decay)
         self.momentum = momentum
         self.velocities = {}
 
-    def _update(self, param, grad):
+    def _update(self, param, grad) -> None:
         param_id = id(param)
 
         if param_id not in self.velocities:
@@ -25,15 +50,29 @@ class SGDMomentum(Optimizer):
         self.velocities[param_id] = v
 
 class Adam(Optimizer):
+    """Adaptive Moment Estimation (Adam) optimizer.
+
+    Combines momentum and adaptive learning rates for efficient optimization.
+    Maintains estimates of first and second moments of gradients.
+
+    Args:
+        parameters: List of Parameter objects to optimize.
+        learning_rate: Learning rate. Defaults to 1e-3.
+        beta1: Exponential decay rate for first moment estimates. Defaults to 0.9.
+        beta2: Exponential decay rate for second moment estimates. Defaults to 0.999.
+        eps: Small constant for numerical stability. Defaults to 1e-8.
+        weight_decay: L2 regularization coefficient. Defaults to 0.0.
+    """
+
     def __init__(
         self,
-        parameters,
-        learning_rate=1e-3,
-        beta1=0.9,
-        beta2=0.999,
-        eps=1e-8,
-        weight_decay=0.0,
-    ):
+        parameters: list,
+        learning_rate: float = 1e-3,
+        beta1: float = 0.9,
+        beta2: float = 0.999,
+        eps: float = 1e-8,
+        weight_decay: float = 0.0,
+    ) -> None:
         super().__init__(parameters, learning_rate, weight_decay)
         self.beta1 = beta1
         self.beta2 = beta2
@@ -42,11 +81,11 @@ class Adam(Optimizer):
         self.m = {}
         self.v = {}
 
-    def step(self):
+    def step(self) -> None:
         self.t += 1
         super().step()
 
-    def _update(self, param, grad):
+    def _update(self, param, grad) -> None:
         param_id = id(param)
 
         if param_id not in self.m:

@@ -2,16 +2,46 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 class Evaluator:
-    def __init__(self, model, class_names=None):
+    """Evaluator for model predictions and performance metrics.
+
+    Provides methods for generating predictions, computing accuracy, confusion matrices,
+    and visualizing model performance.
+
+    Args:
+        model: The neural network model to evaluate.
+        class_names: Optional list of class names for labeling. Defaults to None.
+    """
+
+    def __init__(self, model, class_names: list[str] | None = None) -> None:
         self.model = model
         self.class_names = class_names
         self.num_classes = len(class_names) if class_names is not None else None
 
-    def predict(self, X):
+    def predict(self, X: np.ndarray) -> np.ndarray:
+        """Generate class predictions for input samples.
+
+        Args:
+            X: Input array of shape (n_samples, ...).
+
+        Returns:
+            Array of predicted class indices, shape (n_samples,).
+        """
+        self.model.eval()
         scores = self.model.forward(X)
         return np.argmax(scores, axis=1)
 
-    def evaluate(self, dataloader, store_data=True):
+    def evaluate(self, dataloader, store_data: bool = True) -> dict:
+        """Evaluate model on a dataset.
+
+        Args:
+            dataloader: DataLoader providing batches with 'data' and 'label' keys.
+            store_data: Whether to store input data in results. Defaults to True.
+
+        Returns:
+            Dictionary with keys 'y_true', 'y_pred', 'scores', 'accuracy',
+            and optionally 'X' if store_data is True.
+        """
+        self.model.eval()
         X_all = []
         y_true_all = []
         y_pred_all = []
@@ -47,7 +77,15 @@ class Evaluator:
 
         return results
 
-    def confusion_matrix(self, results):
+    def confusion_matrix(self, results: dict) -> np.ndarray:
+        """Compute confusion matrix from evaluation results.
+
+        Args:
+            results: Dictionary from evaluate() containing 'y_true' and 'y_pred'.
+
+        Returns:
+            Confusion matrix of shape (num_classes, num_classes).
+        """
         y_true = results["y_true"]
         y_pred = results["y_pred"]
 
@@ -62,7 +100,12 @@ class Evaluator:
 
         return cm
 
-    def plot_confusion_matrix(self, results):
+    def plot_confusion_matrix(self, results: dict) -> None:
+        """Plot confusion matrix visualization.
+
+        Args:
+            results: Dictionary from evaluate() containing prediction results.
+        """
         cm = self.confusion_matrix(results)
         num_classes = cm.shape[0]
 
@@ -98,7 +141,19 @@ class Evaluator:
         plt.tight_layout()
         plt.show()
 
-    def plot_wrong_predictions(self, results, max_images=9, image_shape=(28, 28)):
+    def plot_wrong_predictions(
+        self, results: dict, max_images: int = 9, image_shape: tuple[int, int] = (28, 28)
+    ) -> None:
+        """Visualize misclassified samples from evaluation results.
+
+        Args:
+            results: Dictionary from evaluate() containing 'X', 'y_true', and 'y_pred'.
+            max_images: Maximum number of wrong predictions to display. Defaults to 9.
+            image_shape: Shape to reshape images for display (height, width). Defaults to (28, 28).
+
+        Raises:
+            ValueError: If results does not contain 'X' (requires store_data=True in evaluate()).
+        """
         if "X" not in results:
             raise ValueError("results must contain X. Use evaluate(..., store_data=True).")
 
