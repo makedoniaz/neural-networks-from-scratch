@@ -12,8 +12,8 @@ The framework includes layers, loss functions, optimizers, data loading utilitie
 * Test Accuracy: **89.98%**
 
 ### Training Curves
-<img width="49%" alt="accuracy_curve" src="https://github.com/user-attachments/assets/dfae731b-966b-4734-8aec-d6b5a6701cb2" />
-<img width="49%" alt="loss_curve" src="https://github.com/user-attachments/assets/3b8dd6ea-c058-432d-accd-915c0e51b4f6" />
+<img width="65%" alt="training_curves_square_fixed" src="https://github.com/user-attachments/assets/22a5ebdf-f44b-4112-b698-41146c9c620a" />
+
 
 ---
 
@@ -154,13 +154,15 @@ Flatten
 
 ### Confusion Matrix
 
-<img  width="75%" alt="cm_matrix_vis" src="https://github.com/user-attachments/assets/04ff18e2-b763-4cf1-88e2-d7d4a39c4999" />
+<img width="65%" alt="confusion_matrix" src="https://github.com/user-attachments/assets/1fd1fa3a-9358-4768-9502-0575bdf22d3a" />
+
 
 
 
 ### Misclassified Samples
 
-<img width="75%" alt="misclassifications" src="https://github.com/user-attachments/assets/98e0c5a5-6b5e-424d-9ca9-4ab54fdd97be" />
+<img width="65%" alt="wrong_predictions" src="https://github.com/user-attachments/assets/fbfd947b-a3bb-48e9-bb55-b3799a909d58" />
+
 
 
 ---
